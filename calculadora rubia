@@ -1,0 +1,74 @@
+import tkinter as tk
+from tkinter import font
+
+# Função para adicionar números e operadores à entrada
+def click(event):
+    button_text = event.widget.cget("text")
+    
+    if button_text == "=":
+        try:
+            # Avalia a expressão e realiza o cálculo
+            result = str(eval(display.get()))
+            display.set(result)
+        except:
+            display.set("Error")
+    elif button_text == "C":
+        display.set("")  # Limpa o display
+    else:
+        display.set(button_text + display.get())  # Adiciona o valor pressionado
+
+# Função para realizar a operação de porcentagem
+def percentage():
+    try:
+        result = str(eval(display.get()) / 100)  # Calcula a porcentagem
+        display.set(result)
+    except:
+        display.set("Error")
+
+# Configuração da janela principal
+root = tk.Tk()
+root.title("Calculadora Rúbia Martins")
+root.geometry("400x600")
+root.resizable(False, False)  # Impede redimensionamento
+root.config(bg="#282c34")  # Fundo da interface
+
+# Fonte personalizada para os botões e display
+button_font = font.Font(family="Arial", size=12, weight="bold")
+display_font = font.Font(family="Arial", size=18, weight="bold")
+
+# Variável para armazenar o valor digitado
+display = tk.StringVar()
+
+# Display (tela de entrada)
+entry = tk.Entry(root, textvar=display, font=display_font, bg="#1e1e1e", fg="white", bd=10, insertwidth=2, justify="right")
+entry.grid(row=0, column=0, columnspan=4, padx=10, pady=20, ipadx=8, ipady=20)
+
+# Lista de botões (incluindo números, operações e limpar)
+buttons = [
+    'C', '%', '/', '*',
+    '1', '2', '3', '-',
+    '4', '5', '6', '+',
+    '7', '8', '9', '=',
+    '0', '.', '(', ')'
+]
+
+# Adicionar botões à interface
+row_val = 1
+col_val = 0
+
+for button in buttons:
+    btn = tk.Button(root, text=button, padx=20, pady=20, font=button_font, bg="#ff69b4", fg="black", borderwidth=0)
+    btn.grid(row=row_val, column=col_val, padx=5, pady=5)
+
+    if button == "%":
+        btn.config(command=percentage)
+    else:
+        btn.bind("<Button-1>", click)
+
+    col_val += 1
+    if col_val > 3:
+        col_val = 0
+        row_val += 1
+
+# Inicia o loop da interface
+root.mainloop()
